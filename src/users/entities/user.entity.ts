@@ -10,4 +10,8 @@ export class User {
   @ApiProperty()
   @Column()
   name: string;
+
+  @ApiProperty()
+  @Column()
+  age: number;
 }
