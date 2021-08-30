@@ -1,4 +1,4 @@
-import { NotFoundException, Query } from '@nestjs/common';
+import { NotFoundException, Patch, Query } from '@nestjs/common';
 import { ParseIntPipe } from '@nestjs/common';
 import { Body, Get, Param, Post } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
@@ -11,6 +11,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -34,11 +35,21 @@ export class UsersController {
 
     if (!user) {
       throw new NotFoundException();
-      // throw new BadRequestException()
-      // throw new InternalServerErrorException()
     }
 
     return user;
+  }
+
+  @ApiOkResponse({ type: User })
+  @ApiNotFoundResponse()
+  @Patch()
+  updateUserById(@Body() body: UpdateUserDto): Promise<User> {
+    try {
+      const user = this.usersService.updateUser(body);
+      return user;
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   @ApiCreatedResponse({ type: User })
